@@ -1,5 +1,6 @@
 package org.gcbh.scala_kafka.client.consumer
 
+import java.util.Properties
 import java.util.regex.Pattern
 
 import org.apache.kafka.clients.consumer.{ConsumerRebalanceListener, ConsumerRecords, OffsetAndMetadata, OffsetAndTimestamp, OffsetCommitCallback, KafkaConsumer => JKafkaConsumer}
@@ -7,7 +8,6 @@ import org.apache.kafka.common.{Metric, MetricName, PartitionInfo, TopicPartitio
 
 import scala.collection.JavaConverters._
 import scala.concurrent.duration.TimeUnit
-import scala.language.implicitConversions
 
 class KafkaConsumer[K, V](consumer: JKafkaConsumer[K, V])
   extends ConsumerProxy[K, V] {
@@ -85,4 +85,12 @@ class KafkaConsumer[K, V](consumer: JKafkaConsumer[K, V])
   override def close(timeout: Long, timeUnit: TimeUnit): Unit = consumer.close(timeout, timeUnit)
 
   override def wakeUp(): Unit = consumer.wakeup()
+}
+
+object KafkaConsumer {
+  def apply[K, V](jKafkaConsumer: JKafkaConsumer[K, V]): KafkaConsumer[K, V] = new KafkaConsumer[K, V](jKafkaConsumer)
+
+  def apply[K, V](properties: Properties) = apply(new JKafkaConsumer[K, V](properties))
+
+
 }

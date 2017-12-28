@@ -47,7 +47,4 @@ object KafkaProducer {
 
   def apply[K, V](properties: Properties) = apply(new JKafkaProducer[K, V](properties))
 
-  object Conf {
-
-  }
 }
